@@ -724,16 +724,18 @@ let predefined_ros =
 
 "
 
-let ros_check_disdelta_of_stt (debug:bool) srcsize vocsize prog =
-    predefined_ros^ (String.concat "\n" (gen_symbolic_source_view srcsize vocsize prog)) ^ "\n\n"^ ros_constraint_sentence_of_stt debug prog ^ "\n\n"^ ros_disdelta_of_stt debug prog
+let ros_output_smt (output_smt: bool): string = if output_smt then "(output-smt true)\n\n" else "" 
+
+let ros_check_disdelta_of_stt (debug:bool) (output_smt: bool) srcsize vocsize prog =
+    predefined_ros^ (ros_output_smt output_smt)^ (String.concat "\n" (gen_symbolic_source_view srcsize vocsize prog)) ^ "\n\n"^ ros_constraint_sentence_of_stt debug prog ^ "\n\n"^ ros_disdelta_of_stt debug prog
 
 
-let ros_check_getput_of_stt (debug:bool) srcsize vocsize prog =
-    predefined_ros^ (String.concat "\n" (gen_symbolic_source srcsize vocsize prog)) ^ "\n\n"^ ros_non_view_constraint_sentence_of_stt debug prog ^ "\n\n"^ ros_getput_of_stt debug prog
+let ros_check_getput_of_stt (debug:bool) (output_smt: bool) srcsize vocsize prog =
+    predefined_ros^ (ros_output_smt output_smt)^ (String.concat "\n" (gen_symbolic_source srcsize vocsize prog)) ^ "\n\n"^ ros_non_view_constraint_sentence_of_stt debug prog ^ "\n\n"^ ros_getput_of_stt debug prog
 
 
-let ros_check_putget_of_stt (debug:bool) srcsize vocsize prog =
-    predefined_ros^ (String.concat "\n" (gen_symbolic_source_view srcsize vocsize prog)) ^ "\n\n"^ ros_constraint_sentence_of_stt debug prog ^ "\n\n"^ ros_putget_of_stt debug prog
+let ros_check_putget_of_stt (debug:bool) (output_smt: bool) srcsize vocsize prog =
+    predefined_ros^ (ros_output_smt output_smt)^ (String.concat "\n" (gen_symbolic_source_view srcsize vocsize prog)) ^ "\n\n"^ ros_constraint_sentence_of_stt debug prog ^ "\n\n"^ ros_putget_of_stt debug prog
 
 
 type cellkey = (string*string*int) (* table name, column name, rowid *)

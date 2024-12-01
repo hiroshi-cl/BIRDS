@@ -47,7 +47,7 @@ let init_vocabulary = [
 ]
 
 (** interatively generate a counterexample for a given property *)
-let gen_counterexample (log:bool) (property:property) (maxsize:int) (timeout:int) (iprog: expr) =
+let gen_counterexample (log:bool) (output_smt: bool) (property:property) (maxsize:int) (timeout:int) (iprog: expr) =
   let error_mess = ref "" in
   (* let all_rules, non_rules = Rule_preprocess.seperate_rules iprog in *)
   let string_adom = init_vocabulary@(Rule_preprocess.extract_rules_string_adom iprog.rules) in
@@ -69,9 +69,9 @@ let gen_counterexample (log:bool) (property:property) (maxsize:int) (timeout:int
   let rec gen_ctex i maxsize =
       let exitcode, mes = check_ros_prog log timeout (
           match property with
-          | Getput -> if log then print_endline "==> generating a counterexample for getput"; Ast2ros.ros_check_getput_of_stt log i vocsize prog
-          | Putget -> if log then print_endline "==> generating a counterexample for putget"; Ast2ros.ros_check_putget_of_stt log i vocsize prog
-          | Disdelta -> if log then print_endline "==> generating a counterexample for delta disjointness"; Ast2ros.ros_check_disdelta_of_stt log i vocsize prog
+          | Getput -> if log then print_endline "==> generating a counterexample for getput"; Ast2ros.ros_check_getput_of_stt log output_smt i vocsize prog
+          | Putget -> if log then print_endline "==> generating a counterexample for putget"; Ast2ros.ros_check_putget_of_stt log output_smt i vocsize prog
+          | Disdelta -> if log then print_endline "==> generating a counterexample for delta disjointness"; Ast2ros.ros_check_disdelta_of_stt log output_smt i vocsize prog
           ) in
       if not (exitcode=0) then
           if (exitcode = 124) then (error_mess := "Stop generating a counterexample of "^ string_of_property property ^": Timeout"; i,"")
